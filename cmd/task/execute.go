@@ -21,11 +21,15 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package task
 
 import (
+	"encoding/json"
+	"io"
 	"log"
 
+	tools "github.com/MottainaiCI/mottainai-cli/common"
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
 	setting "github.com/MottainaiCI/mottainai-server/pkg/settings"
 	citasks "github.com/MottainaiCI/mottainai-server/pkg/tasks"
+	v1 "github.com/MottainaiCI/mottainai-server/routes/schema/v1"
 	cobra "github.com/spf13/cobra"
 	viper "github.com/spf13/viper"
 )
@@ -48,11 +52,18 @@ func newTaskExecuteCommand(config *setting.Config) *cobra.Command {
 			}
 
 			var t citasks.Task
-			err := fetcher.GetJSONOptions("/api/tasks/"+id, map[string]string{}, &t)
-			if err != nil {
-				panic(err.Error())
-			}
 
+			var err error
+			req := client.Request{
+				Route: v1.Schema.GetTaskRoute("as_json"),
+				Interpolations: map[string]string{
+					":id": id,
+				},
+			}
+			err = fetcher.HandleRaw(req, func(b io.ReadCloser) error {
+				return json.NewDecoder(b).Decode(&t)
+			})
+			tools.CheckError(err)
 			var fn func(string) (int, error)
 
 			config.GetWeb().AppURL = v.GetString("master")

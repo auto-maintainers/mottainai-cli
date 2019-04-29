@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package task
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -46,9 +45,9 @@ func newTaskCloneCommand(config *setting.Config) *cobra.Command {
 			}
 
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
-			res, err := fetcher.GetOptions("/api/tasks/clone/"+id, map[string]string{})
+			res, err := fetcher.CloneTask(id)
 			tools.CheckError(err)
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 

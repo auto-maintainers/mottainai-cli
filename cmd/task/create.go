@@ -94,11 +94,14 @@ func newTaskCreateCommand(config *setting.Config) *cobra.Command {
 			if len(to) > 0 {
 				created = GenerateTasks(fetcher, dat, to)
 			} else {
-				res, err := fetcher.GenericForm("/api/tasks", dat)
-				if err != nil {
-					panic(err)
+				res, err := fetcher.CreateTask(dat)
+				tools.CheckError(err)
+
+				tid := res.ID
+				if tid == "" {
+					tools.PrintResponse(res)
+					panic("Failed creating task")
 				}
-				tid := string(res)
 				created[tid] = false
 
 				fmt.Println("-------------------------")

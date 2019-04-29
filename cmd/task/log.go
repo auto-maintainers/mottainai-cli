@@ -44,7 +44,7 @@ func newTaskLogCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a task id")
 			}
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
-			buff, err := fetcher.GetOptions("/api/tasks/stream_output/"+id+"/0", map[string]string{})
+			buff, err := fetcher.TaskLog(id)
 			if err != nil {
 				panic(err)
 			}

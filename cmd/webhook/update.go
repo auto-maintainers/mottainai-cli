@@ -22,9 +22,10 @@ package webhook
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
+
+	event "github.com/MottainaiCI/mottainai-server/pkg/event"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
@@ -47,7 +48,7 @@ func newWebHookUpdateCommand(config *setting.Config) *cobra.Command {
 			var err error
 			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
-
+			var res event.APIResponse
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 			id := args[0]
 			mytype := args[1]
@@ -64,7 +65,8 @@ func newWebHookUpdateCommand(config *setting.Config) *cobra.Command {
 			tools.CheckError(err)
 			yamlfile, err := cmd.Flags().GetString("yaml")
 			tools.CheckError(err)
-			if mytype == "pipeline" {
+			switch mytype {
+			case "pipeline":
 				t := &task.Pipeline{}
 				if jsonfile != "" {
 					content, err := ioutil.ReadFile(jsonfile)
@@ -84,7 +86,9 @@ func newWebHookUpdateCommand(config *setting.Config) *cobra.Command {
 					}
 					dat = t.ToMap(false)
 				}
-			} else if mytype == "task" {
+
+				res, err = fetcher.WebHookPipelineUpdate(id, dat)
+			case "task":
 				t := &task.Task{}
 
 				if jsonfile != "" {
@@ -105,12 +109,13 @@ func newWebHookUpdateCommand(config *setting.Config) *cobra.Command {
 					}
 					dat = t.ToMap()
 				}
+
+				res, err = fetcher.WebHookTaskUpdate(id, dat)
 			}
 
-			res, err := fetcher.GenericForm("/api/webhook/update/"+mytype+"/"+id, dat)
 			tools.CheckError(err)
 
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 

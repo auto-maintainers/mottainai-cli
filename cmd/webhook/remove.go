@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package webhook
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -47,10 +46,10 @@ func newWebHookRemoveCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a webhook id")
 			}
 
-			res, err := fetcher.GetOptions("/api/webhook/delete/"+id, map[string]string{})
-			tools.CheckError(err)
+			resp, err := fetcher.WebHookDelete(id)
 
-			fmt.Println(string(res))
+			tools.CheckError(err)
+			tools.PrintResponse(resp)
 		},
 	}
 

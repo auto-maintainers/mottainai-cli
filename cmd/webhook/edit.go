@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package webhook
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -58,9 +57,9 @@ func newWebHookEditCommand(config *setting.Config) *cobra.Command {
 			dat["value"] = value
 			dat["id"] = id
 
-			res, err := fetcher.GenericForm("/api/webhook/set", dat)
+			res, err := fetcher.WebHookEdit(dat)
 			tools.CheckError(err)
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 

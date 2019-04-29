@@ -21,8 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package node
 
 import (
-	"fmt"
-
 	tools "github.com/MottainaiCI/mottainai-cli/common"
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
 	setting "github.com/MottainaiCI/mottainai-server/pkg/settings"
@@ -41,10 +39,10 @@ func newNodeCreateCommand(config *setting.Config) *cobra.Command {
 
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
-			res, err := fetcher.GetOptions("/api/nodes/add", map[string]string{})
-			tools.CheckError(err)
+			resp, err := fetcher.CreateNode()
 
-			fmt.Println(string(res))
+			tools.CheckError(err)
+			tools.PrintResponse(resp)
 		},
 	}
 
