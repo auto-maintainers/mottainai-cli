@@ -21,11 +21,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package user
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
+	event "github.com/MottainaiCI/mottainai-server/pkg/event"
 	setting "github.com/MottainaiCI/mottainai-server/pkg/settings"
 	cobra "github.com/spf13/cobra"
 	viper "github.com/spf13/viper"
@@ -40,7 +40,7 @@ func newUserSetCommand(config *setting.Config) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			var err error
 			var fetcher *client.Fetcher
-			var res []byte
+			var res event.APIResponse
 			var v *viper.Viper = config.Viper
 			t, err := cmd.Flags().GetString("type")
 
@@ -55,16 +55,16 @@ func newUserSetCommand(config *setting.Config) *cobra.Command {
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			if t == "admin" {
-				res, err = fetcher.GetOptions("/api/user/set/admin/"+id, map[string]string{})
+				res, err = fetcher.UserSet(id, "admin")
 			} else if t == "user" {
-				res, err = fetcher.GetOptions("/api/user/unset/admin/"+id, map[string]string{})
-				res, err = fetcher.GetOptions("/api/user/unset/manager/"+id, map[string]string{})
+				res, err = fetcher.UserUnset(id, "admin")
+				res, err = fetcher.UserUnset(id, "manager")
 			} else if t == "manager" {
-				res, err = fetcher.GetOptions("/api/user/set/manager/"+id, map[string]string{})
+				res, err = fetcher.UserSet(id, "manager")
 			}
 
 			tools.CheckError(err)
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 	var flags = cmd.Flags()

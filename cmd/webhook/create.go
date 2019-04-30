@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package webhook
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -47,10 +46,9 @@ func newWebHookCreateCommand(config *setting.Config) *cobra.Command {
 			if len(webtype) == 0 {
 				log.Fatalln("You need to define a webhook type, e.g. github")
 			}
-			res, err := fetcher.GetOptions("/api/webhook/create/"+webtype, map[string]string{})
+			res, err := fetcher.WebHookCreate(webtype)
 			tools.CheckError(err)
-
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 

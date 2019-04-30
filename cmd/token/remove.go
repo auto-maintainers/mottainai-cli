@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package token
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -47,10 +46,9 @@ func newTokenRemoveCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a plan id")
 			}
 
-			res, err := fetcher.GetOptions("/api/token/delete/"+id, map[string]string{})
+			res, err := fetcher.TokenDelete(id)
 			tools.CheckError(err)
-
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 

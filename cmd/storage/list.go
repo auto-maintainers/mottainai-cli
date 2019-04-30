@@ -24,6 +24,8 @@ import (
 	"log"
 	"os"
 
+	v1 "github.com/MottainaiCI/mottainai-server/routes/schema/v1"
+
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
 	setting "github.com/MottainaiCI/mottainai-server/pkg/settings"
 	storage "github.com/MottainaiCI/mottainai-server/pkg/storage"
@@ -44,7 +46,15 @@ func newStorageListCommand(config *setting.Config) *cobra.Command {
 			var v *viper.Viper = config.Viper
 
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
-			fetcher.GetJSONOptions("/api/storage/list", map[string]string{}, &n)
+			req := client.Request{
+				Route:  v1.Schema.GetStorageRoute("show_all"),
+				Target: &n,
+			}
+
+			err := fetcher.Handle(req)
+			if err != nil {
+				log.Fatalln("error:", err)
+			}
 
 			log.Println("Available storages: ")
 

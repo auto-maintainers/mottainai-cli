@@ -24,8 +24,10 @@ import (
 	"fmt"
 	"log"
 
+	tools "github.com/MottainaiCI/mottainai-cli/common"
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
 	setting "github.com/MottainaiCI/mottainai-server/pkg/settings"
+	v1 "github.com/MottainaiCI/mottainai-server/routes/schema/v1"
 	cobra "github.com/spf13/cobra"
 	viper "github.com/spf13/viper"
 )
@@ -47,7 +49,12 @@ func newTaskArtefactsCommand(config *setting.Config) *cobra.Command {
 
 			fmt.Println("Artefacts for:", id)
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
-			fetcher.GetJSONOptions("/api/tasks/"+id+"/artefacts", map[string]string{}, &tlist)
+			req := client.Request{
+				Route:  v1.Schema.GetTaskRoute("artefact_list"),
+				Target: &tlist,
+			}
+			err := fetcher.Handle(req)
+			tools.CheckError(err)
 
 			for _, i := range tlist {
 				fmt.Println("- " + i)

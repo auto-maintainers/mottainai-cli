@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package namespace
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -52,9 +51,9 @@ func newNamespaceTagCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a namespace")
 			}
 
-			res, err := fetcher.GetOptions("/api/namespace/"+ns+"/tag/"+from, map[string]string{})
+			res, err := fetcher.NamespaceTag(from, ns)
 			tools.CheckError(err)
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 

@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package storage
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -47,9 +46,9 @@ func newStorageCreateCommand(config *setting.Config) *cobra.Command {
 			}
 
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
-			res, err := fetcher.GetOptions("/api/storage/"+storage+"/create", map[string]string{})
+			res, err := fetcher.StorageCreate(storage)
 			tools.CheckError(err)
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 

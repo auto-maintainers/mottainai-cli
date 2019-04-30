@@ -88,9 +88,14 @@ func newPlanCreateCommand(config *setting.Config) *cobra.Command {
 				}
 			}
 
-			res, err := fetcher.GenericForm("/api/tasks/plan", dat)
+			res, err := fetcher.PlanCreate(dat)
 			tools.CheckError(err)
-			tid := string(res)
+
+			tid := res.ID
+			if tid == "" {
+				tools.PrintResponse(res)
+				panic("Failed creating task")
+			}
 
 			fmt.Println("-------------------------")
 			fmt.Println("Plan " + tid + " has been created")

@@ -74,9 +74,14 @@ func newPipelineCreateCommand(config *setting.Config) *cobra.Command {
 				dat = p.ToMap(false)
 			}
 
-			res, err := fetcher.GenericForm("/api/tasks/pipeline", dat)
+			res, err := fetcher.PipelineCreate(dat)
 			tools.CheckError(err)
-			tid := string(res)
+
+			tid := res.ID
+			if tid == "" {
+				tools.PrintResponse(res)
+				panic("Failed creating task")
+			}
 
 			fmt.Println("-------------------------")
 			fmt.Println("Pipeline " + tid + " has been created")

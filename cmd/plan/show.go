@@ -28,6 +28,7 @@ import (
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
 	setting "github.com/MottainaiCI/mottainai-server/pkg/settings"
 	citasks "github.com/MottainaiCI/mottainai-server/pkg/tasks"
+	"github.com/MottainaiCI/mottainai-server/routes/schema/v1"
 	cobra "github.com/spf13/cobra"
 	viper "github.com/spf13/viper"
 )
@@ -48,7 +49,19 @@ func newPlanShowCommand(config *setting.Config) *cobra.Command {
 			}
 
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
-			fetcher.GetJSONOptions("/api/tasks/plan/"+id, map[string]string{}, &t)
+
+			req := client.Request{
+				Route: v1.Schema.GetTaskRoute("plan_show"),
+				Interpolations: map[string]string{
+					":id": id,
+				},
+				Target: &t,
+			}
+
+			err := fetcher.Handle(req)
+			if err != nil {
+				log.Fatalln("error:", err)
+			}
 			b, err := json.MarshalIndent(t, "", "  ")
 			if err != nil {
 				log.Fatalln("error:", err)

@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package settingcmd
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -48,11 +47,9 @@ func newSettingUpdateCommand(config *setting.Config) *cobra.Command {
 			dat["key"] = args[0]
 			dat["value"] = args[1]
 
-			res, err := fetcher.GenericForm("/api/settings/update", dat)
+			res, err := fetcher.SettingUpdate(dat)
 			tools.CheckError(err)
-			tid := string(res)
-
-			fmt.Println("Setting ", args, "Updated", tid)
+			tools.PrintResponse(res)
 		},
 	}
 

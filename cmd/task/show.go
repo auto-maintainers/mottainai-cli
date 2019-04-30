@@ -23,7 +23,6 @@ package task
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
@@ -49,21 +48,20 @@ func newTaskShowCommand(config *setting.Config) *cobra.Command {
 			if len(id) == 0 {
 				log.Fatalln("You need to define a task id")
 			}
+			var t citasks.Task
 
 			req := client.Request{
 				Route: v1.Schema.GetTaskRoute("as_json"),
 				Interpolations: map[string]string{
 					":id": id,
 				},
+				Target: &t,
 			}
 
-			var t citasks.Task
-			var err error
-
-			err = fetcher.HandleRaw(req, func(b io.ReadCloser) error {
-				return json.NewDecoder(b).Decode(&t)
-			})
-
+			err := fetcher.Handle(req)
+			if err != nil {
+				panic(err)
+			}
 			b, err := json.MarshalIndent(t, "", "  ")
 			if err != nil {
 				fmt.Println("error:", err)

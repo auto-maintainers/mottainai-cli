@@ -81,7 +81,7 @@ func newTaskAttachCommand(config *setting.Config) *cobra.Command {
 					return
 				}
 
-				buff, err := fetcher.TaskStream(id+,strconv.Itoa(pos))
+				buff, err := fetcher.TaskStream(id, strconv.Itoa(pos))
 				tools.CheckError(err)
 				pos += len(buff)
 				tools.PrintBuff(buff)

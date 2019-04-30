@@ -28,6 +28,7 @@ import (
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
 	setting "github.com/MottainaiCI/mottainai-server/pkg/settings"
 	token "github.com/MottainaiCI/mottainai-server/pkg/token"
+	"github.com/MottainaiCI/mottainai-server/routes/schema/v1"
 	tablewriter "github.com/olekukonko/tablewriter"
 	cobra "github.com/spf13/cobra"
 	viper "github.com/spf13/viper"
@@ -47,7 +48,12 @@ func newTokenListCommand(config *setting.Config) *cobra.Command {
 			var v *viper.Viper = config.Viper
 
 			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
-			fetcher.GetJSONOptions("/api/token", map[string]string{}, &tlist)
+			req := client.Request{
+				Route:  v1.Schema.GetTokenRoute("show"),
+				Target: &tlist,
+			}
+			err = fetcher.Handle(req)
+			tools.CheckError(err)
 
 			quiet, err = cmd.Flags().GetBool("quiet")
 			tools.CheckError(err)

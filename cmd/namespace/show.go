@@ -23,8 +23,10 @@ package namespace
 import (
 	"log"
 
+	tools "github.com/MottainaiCI/mottainai-cli/common"
 	client "github.com/MottainaiCI/mottainai-server/pkg/client"
 	setting "github.com/MottainaiCI/mottainai-server/pkg/settings"
+	v1 "github.com/MottainaiCI/mottainai-server/routes/schema/v1"
 	cobra "github.com/spf13/cobra"
 	viper "github.com/spf13/viper"
 )
@@ -46,7 +48,16 @@ func newNamespaceShowCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a namespace name")
 			}
 
-			fetcher.GetJSONOptions("/api/namespace/"+ns+"/list", map[string]string{}, &tlist)
+			req := client.Request{
+				Route:  v1.Schema.GetNamespaceRoute("show_artefacts"),
+				Target: &tlist,
+				Interpolations: map[string]string{
+					":name": ns,
+				},
+			}
+			err := fetcher.Handle(req)
+			tools.CheckError(err)
+
 			for _, i := range tlist {
 				log.Println("- " + i)
 			}

@@ -21,7 +21,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package storage
 
 import (
-	"fmt"
 	"log"
 
 	tools "github.com/MottainaiCI/mottainai-cli/common"
@@ -49,9 +48,9 @@ func newStorageRemoveCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a storage id and a path to delete")
 			}
 
-			res, err := fetcher.GetOptions("/api/storage/"+st+"/remove/"+path, map[string]string{})
+			res, err := fetcher.StorageRemovePath(st, path)
 			tools.CheckError(err)
-			fmt.Println(string(res))
+			tools.PrintResponse(res)
 		},
 	}
 
