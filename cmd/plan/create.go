@@ -43,7 +43,6 @@ func newPlanCreateCommand(config *setting.Config) *cobra.Command {
 		// TODO: PreRun check of minimal args if --json is not present
 		Run: func(cmd *cobra.Command, args []string) {
 			var err error
-			var fetcher *client.Fetcher
 			var jsonfile string
 			var value string
 			var v *viper.Viper = config.Viper
@@ -53,7 +52,7 @@ func newPlanCreateCommand(config *setting.Config) *cobra.Command {
 				"prune", "queue", "cache_image", "planned",
 			}
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 			var p = &task.Plan{}
 			dat := make(map[string]interface{})
 

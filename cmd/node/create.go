@@ -34,10 +34,10 @@ func newNodeCreateCommand(config *setting.Config) *cobra.Command {
 		Short: "Create a new node",
 		Args:  cobra.OnlyValidArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			var fetcher *client.Fetcher
+
 			var v *viper.Viper = config.Viper
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			resp, err := fetcher.CreateNode()
 

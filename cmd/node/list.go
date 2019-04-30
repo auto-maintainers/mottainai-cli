@@ -41,10 +41,9 @@ func newNodeListCommand(config *setting.Config) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			var n []nodes.Node
 			var node_table [][]string
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			req := client.Request{
 				Route:  v1.Schema.GetNodeRoute("show_all"),

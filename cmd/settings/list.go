@@ -43,10 +43,9 @@ func newSettingListCommand(config *setting.Config) *cobra.Command {
 			var tlist []setting.Setting
 			var setting_table [][]string
 			var quiet bool
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 			req := client.Request{
 				Route:  v1.Schema.GetSettingRoute("show_all"),
 				Target: &tlist,

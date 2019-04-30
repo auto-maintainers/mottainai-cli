@@ -38,10 +38,9 @@ func newNamespaceTagCommand(config *setting.Config) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			var err error
 			var from string
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			from, err = cmd.Flags().GetString("from")
 			tools.CheckError(err)

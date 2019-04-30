@@ -36,7 +36,6 @@ func newTaskCloneCommand(config *setting.Config) *cobra.Command {
 		Short: "clone a task",
 		Args:  cobra.RangeArgs(1, 1),
 		Run: func(cmd *cobra.Command, args []string) {
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
 			id := args[0]
@@ -44,7 +43,7 @@ func newTaskCloneCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a task id")
 			}
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 			res, err := fetcher.CloneTask(id)
 			tools.CheckError(err)
 			tools.PrintResponse(res)

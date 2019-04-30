@@ -40,10 +40,9 @@ func newNamespaceListCommand(config *setting.Config) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			var tlist []string
 			var ns_table [][]string
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			req := client.Request{
 				Route:  v1.Schema.GetNamespaceRoute("show_all"),

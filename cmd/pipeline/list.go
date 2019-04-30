@@ -45,10 +45,9 @@ func newPipelineListCommand(config *setting.Config) *cobra.Command {
 			var tlist []citasks.Pipeline
 			var task_table [][]string
 			var quiet bool
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			req := client.Request{
 				Route:  v1.Schema.GetTaskRoute("pipeline_list"),

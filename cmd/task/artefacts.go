@@ -38,7 +38,6 @@ func newTaskArtefactsCommand(config *setting.Config) *cobra.Command {
 		Short: "Show artefacts of a task",
 		Args:  cobra.RangeArgs(1, 1),
 		Run: func(cmd *cobra.Command, args []string) {
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 			var tlist []string
 
@@ -48,7 +47,7 @@ func newTaskArtefactsCommand(config *setting.Config) *cobra.Command {
 			}
 
 			fmt.Println("Artefacts for:", id)
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 			req := client.Request{
 				Route:  v1.Schema.GetTaskRoute("artefact_list"),
 				Target: &tlist,

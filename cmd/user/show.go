@@ -41,7 +41,6 @@ func newUserShowCommand(config *setting.Config) *cobra.Command {
 		Args:  cobra.OnlyValidArgs,
 		// TODO: PreRun check of minimal args if --json is not present
 		Run: func(cmd *cobra.Command, args []string) {
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
 			if len(args) == 0 {
@@ -52,7 +51,7 @@ func newUserShowCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a user id")
 			}
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			var t *user.User
 			req := client.Request{

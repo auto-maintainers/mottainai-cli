@@ -45,10 +45,9 @@ func newWebHookListCommand(config *setting.Config) *cobra.Command {
 			var tlist []webhook.WebHook
 			var task_table [][]string
 			var quiet bool
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			req := client.Request{
 				Route:  v1.Schema.GetWebHookRoute("show_all"),

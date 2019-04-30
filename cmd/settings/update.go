@@ -36,9 +36,8 @@ func newSettingUpdateCommand(config *setting.Config) *cobra.Command {
 		Short: "Update a system setting",
 		Args:  cobra.RangeArgs(2, 2),
 		Run: func(cmd *cobra.Command, args []string) {
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 			dat := make(map[string]interface{})
 
 			if len(args) != 2 {

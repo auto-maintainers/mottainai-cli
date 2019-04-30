@@ -41,7 +41,6 @@ func newPipelineShowCommand(config *setting.Config) *cobra.Command {
 		Args:  cobra.RangeArgs(1, 1),
 		Run: func(cmd *cobra.Command, args []string) {
 			var t citasks.Pipeline
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
 			id := args[0]
@@ -49,7 +48,7 @@ func newPipelineShowCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a pipeline id")
 			}
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			req := client.Request{
 				Route: v1.Schema.GetTaskRoute("pipeline_show"),

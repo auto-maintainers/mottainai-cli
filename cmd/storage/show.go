@@ -37,7 +37,6 @@ func newStorageShowCommand(config *setting.Config) *cobra.Command {
 		Args:  cobra.RangeArgs(1, 1),
 		Run: func(cmd *cobra.Command, args []string) {
 			var tlist []string
-			var fetcher *client.Fetcher
 			var v *viper.Viper = config.Viper
 
 			storage := args[0]
@@ -45,7 +44,7 @@ func newStorageShowCommand(config *setting.Config) *cobra.Command {
 				log.Fatalln("You need to define a storage id")
 			}
 
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			req := client.Request{
 				Route:  v1.Schema.GetStorageRoute("show_artefacts"),

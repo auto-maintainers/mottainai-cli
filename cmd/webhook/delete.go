@@ -38,10 +38,10 @@ func newWebHookDeleteCommand(config *setting.Config) *cobra.Command {
 		Short: "Delete a task or a pipeline associated to a webhook",
 		Args:  cobra.RangeArgs(2, 2),
 		Run: func(cmd *cobra.Command, args []string) {
-			var fetcher *client.Fetcher
+
 			var v *viper.Viper = config.Viper
 			var err error
-			fetcher = client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
+			fetcher := client.NewTokenClient(v.GetString("master"), v.GetString("apikey"), config)
 
 			id := args[0]
 			if len(id) == 0 {

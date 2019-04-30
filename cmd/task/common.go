@@ -37,7 +37,7 @@ import (
 	"github.com/mudler/anagent"
 )
 
-func GenerateTasks(c *client.Fetcher, dat map[string]interface{}, hostreg string) map[string]bool {
+func GenerateTasks(c client.HttpClient, dat map[string]interface{}, hostreg string) map[string]bool {
 	reg, err := regexp.Compile(hostreg)
 	if err != nil {
 		panic(err)
@@ -76,7 +76,7 @@ func GenerateTasks(c *client.Fetcher, dat map[string]interface{}, hostreg string
 	}
 	return created
 }
-func MonitorTasks(f *client.Fetcher, created map[string]bool) {
+func MonitorTasks(f client.HttpClient, created map[string]bool) {
 	agent := anagent.New()
 	var done int
 	var res = 0
@@ -84,7 +84,7 @@ func MonitorTasks(f *client.Fetcher, created map[string]bool) {
 	for k, _ := range created {
 		fmt.Println("Tracking ", k)
 	}
-	agent.TimerSeconds(int64(1), true, func(c *client.Fetcher) {
+	agent.TimerSeconds(int64(1), true, func(c client.HttpClient) {
 
 		if done >= len(created) {
 			agent.Stop()
